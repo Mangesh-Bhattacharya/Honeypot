@@ -1,0 +1,132 @@
+2025-02-11 15:52:44,246 - Starting Honeypot...
+2025-02-11 15:52:44,248 - Honeypot is fully operational.
+2025-02-11 15:52:44,249 - Listening on port 22...
+2025-02-11 15:52:44,249 - Listening on port 21...
+2025-02-11 15:52:44,249 - Listening on port 23...
+2025-02-11 15:52:44,250 - Listening on port 80...
+2025-02-11 15:52:44,250 - Listening on port 443...
+2025-02-11 15:52:44,251 - Listening on port 3306...
+2025-02-11 15:52:44,251 - Listening on port 3389...
+2025-02-11 15:52:45,099 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:2222
+ * Running on http://192.168.2.28:2222
+2025-02-11 15:52:45,099 - [33mPress CTRL+C to quit[0m
+2025-02-11 15:54:29,528 - Starting Honeypot...
+2025-02-11 15:54:29,530 - Honeypot is fully operational.
+2025-02-11 15:54:29,530 - Listening on port 21...
+2025-02-11 15:54:29,530 - Listening on port 22...
+2025-02-11 15:54:29,531 - Listening on port 23...
+2025-02-11 15:54:29,531 - Listening on port 80...
+2025-02-11 15:54:29,531 - Listening on port 443...
+2025-02-11 15:54:29,531 - Listening on port 3306...
+2025-02-11 15:54:29,532 - Listening on port 3389...
+2025-02-11 15:54:30,388 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.2.28:8080
+2025-02-11 15:54:30,388 - [33mPress CTRL+C to quit[0m
+2025-02-11 15:54:39,856 - Keystroke captured: None
+2025-02-11 15:54:39,966 - Keystroke captured: None
+2025-02-11 15:54:40,524 - Keystroke captured: Key.enter
+2025-02-11 15:54:40,557 - Web request from 127.0.0.1: GET /
+2025-02-11 15:54:40,617 - 127.0.0.1 - - [11/Feb/2025 15:54:40] "GET / HTTP/1.1" 200 -
+2025-02-11 15:54:41,174 - 127.0.0.1 - - [11/Feb/2025 15:54:41] "[33mGET /meta.json HTTP/1.1[0m" 404 -
+2025-02-11 15:54:41,185 - 127.0.0.1 - - [11/Feb/2025 15:54:41] "[33mGET /meta.json HTTP/1.1[0m" 404 -
+2025-02-11 15:54:58,018 - Keystroke captured: Key.shift
+2025-02-11 15:54:58,235 - Keystroke captured: w
+2025-02-11 15:54:58,326 - Keystroke captured: h
+2025-02-11 15:54:58,483 - Keystroke captured: a
+2025-02-11 15:54:58,575 - Keystroke captured: t
+2025-02-11 15:54:58,791 - Keystroke captured: Key.space
+2025-02-11 15:54:59,083 - Keystroke captured: t
+2025-02-11 15:54:59,224 - Keystroke captured: i
+2025-02-11 15:54:59,230 - Keystroke captured: o
+2025-02-11 15:54:59,290 - Keystroke captured: Key.space
+2025-02-11 15:54:59,749 - Keystroke captured: Key.backspace
+2025-02-11 15:54:59,885 - Keystroke captured: Key.backspace
+2025-02-11 15:55:00,023 - Keystroke captured: Key.backspace
+2025-02-11 15:55:00,621 - Keystroke captured: o
+2025-02-11 15:55:00,832 - Keystroke captured: Key.space
+2025-02-11 15:55:00,966 - Keystroke captured: d
+2025-02-11 15:55:01,138 - Keystroke captured: o
+2025-02-11 15:55:01,271 - Keystroke captured: Key.space
+2025-02-11 15:55:02,033 - Keystroke captured: i
+2025-02-11 15:55:02,113 - Keystroke captured: f
+2025-02-11 15:55:02,280 - Keystroke captured: Key.space
+2025-02-11 15:55:03,013 - Keystroke captured: h
+2025-02-11 15:55:03,207 - Keystroke captured: o
+2025-02-11 15:55:03,445 - Keystroke captured: n
+2025-02-11 15:55:03,577 - Keystroke captured: e
+2025-02-11 15:55:03,693 - Keystroke captured: y
+2025-02-11 15:55:04,353 - Keystroke captured: p
+2025-02-11 15:55:04,490 - Keystroke captured: o
+2025-02-11 15:55:04,648 - Keystroke captured: r
+2025-02-11 15:55:04,787 - Keystroke captured: t
+2025-02-11 15:55:05,166 - Keystroke captured: Key.backspace
+2025-02-11 15:55:05,305 - Keystroke captured: Key.backspace
+2025-02-11 15:55:05,743 - Keystroke captured: t
+2025-02-11 15:55:05,985 - Keystroke captured: Key.space
+2025-02-11 15:55:06,385 - Keystroke captured: i
+2025-02-11 15:55:06,463 - Keystroke captured: s
+2025-02-11 15:55:06,605 - Keystroke captured: Key.space
+2025-02-11 15:55:06,736 - Keystroke captured: a
+2025-02-11 15:55:06,930 - Keystroke captured: c
+2025-02-11 15:55:07,146 - Keystroke captured: t
+2025-02-11 15:55:07,237 - Keystroke captured: i
+2025-02-11 15:55:07,448 - Keystroke captured: v
+2025-02-11 15:55:07,558 - Keystroke captured: e
+2025-02-11 15:55:07,812 - Keystroke captured: Key.enter
+2025-02-11 15:55:32,769 - Keystroke captured: w
+2025-02-11 15:55:32,859 - Keystroke captured: h
+2025-02-11 15:55:33,052 - Keystroke captured: i
+2025-02-11 15:55:33,183 - Keystroke captured: c
+2025-02-11 15:55:33,299 - Keystroke captured: h
+2025-02-11 15:55:33,435 - Keystroke captured: Key.space
+2025-02-11 15:55:34,218 - Keystroke captured: c
+2025-02-11 15:55:34,310 - Keystroke captured: o
+2025-02-11 15:55:34,472 - Keystroke captured: m
+2025-02-11 15:55:34,610 - Keystroke captured: m
+2025-02-11 15:55:34,714 - Keystroke captured: a
+2025-02-11 15:55:34,833 - Keystroke captured: n
+2025-02-11 15:55:34,989 - Keystroke captured: s
+2025-02-11 15:55:34,994 - Keystroke captured: d
+2025-02-11 15:55:35,874 - Keystroke captured: Key.backspace
+2025-02-11 15:55:36,011 - Keystroke captured: Key.backspace
+2025-02-11 15:55:36,162 - Keystroke captured: d
+2025-02-11 15:55:36,241 - Keystroke captured: s
+2025-02-11 15:55:36,389 - Keystroke captured: Key.space
+2025-02-11 15:55:36,706 - Keystroke captured: t
+2025-02-11 15:55:36,850 - Keystroke captured: o
+2025-02-11 15:55:36,983 - Keystroke captured: Key.space
+2025-02-11 15:55:37,455 - Keystroke captured: r
+2025-02-11 15:55:37,545 - Keystroke captured: u
+2025-02-11 15:55:37,708 - Keystroke captured: n
+2025-02-11 15:55:37,793 - Keystroke captured: Key.space
+2025-02-11 15:55:37,981 - Keystroke captured: t
+2025-02-11 15:55:38,045 - Keystroke captured: o
+2025-02-11 15:55:38,180 - Keystroke captured: Key.space
+2025-02-11 15:55:38,861 - Keystroke captured: t
+2025-02-11 15:55:38,943 - Keystroke captured: e
+2025-02-11 15:55:39,132 - Keystroke captured: s
+2025-02-11 15:55:39,248 - Keystroke captured: t
+2025-02-11 15:55:39,412 - Keystroke captured: Key.space
+2025-02-11 15:55:40,506 - Keystroke captured: t
+2025-02-11 15:55:40,619 - Keystroke captured: h
+2025-02-11 15:55:40,734 - Keystroke captured: i
+2025-02-11 15:55:40,837 - Keystroke captured: s
+2025-02-11 15:55:41,248 - Keystroke captured: Key.enter
+2025-02-11 15:56:15,721 - Web request from 127.0.0.1: GET /
+2025-02-11 15:56:15,774 - 127.0.0.1 - - [11/Feb/2025 15:56:15] "GET / HTTP/1.1" 200 -
+2025-02-11 16:01:00,715 - 127.0.0.1 - - [11/Feb/2025 16:01:00] "[33mGET /meta.json HTTP/1.1[0m" 404 -
+2025-02-11 16:01:00,717 - 127.0.0.1 - - [11/Feb/2025 16:01:00] "[33mGET /meta.json HTTP/1.1[0m" 404 -
+2025-02-11 16:01:14,645 - Keystroke captured: c
+2025-02-11 16:01:14,836 - Keystroke captured: o
+2025-02-11 16:01:15,027 - Keystroke captured: m
+2025-02-11 16:01:15,162 - Keystroke captured: m
+2025-02-11 16:01:15,321 - Keystroke captured: i
+2025-02-11 16:01:15,455 - Keystroke captured: t
+2025-02-11 16:01:16,040 - Keystroke captured: Key.enter
+2025-02-11 16:01:16,793 - Keystroke captured: Key.backspace
+2025-02-11 16:01:17,120 - Keystroke captured: Key.tab
+2025-02-11 16:01:17,547 - Keystroke captured: Key.space
