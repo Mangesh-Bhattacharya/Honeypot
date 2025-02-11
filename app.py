@@ -1,7 +1,7 @@
 # app.py - Flask web service with Keylogger
 import logging
 from flask import Flask, request
-import pynput
+import threading
 from pynput.keyboard import Listener
 
 # Configure logging
@@ -15,7 +15,7 @@ app = Flask(__name__)
 def fake_web_service():
     ip = request.remote_addr
     logging.info(f"Web request from {ip}: {request.method} {request.path}")
-    return "404 Not Found", 404
+    return "Honeypot Active!", 200  # Changed response to avoid 404 errors
 
 # Keylogger function to capture attacker keystrokes
 
@@ -36,10 +36,11 @@ def start_keylogger():
 
 
 if __name__ == "__main__":
+    logging.info("Starting Honeypot...")
+
     # Start keylogger in a separate thread
-    import threading
-    keylogger_thread = threading.Thread(target=start_keylogger)
+    keylogger_thread = threading.Thread(target=start_keylogger, daemon=True)
     keylogger_thread.start()
 
     # Start the web service
-    app.run(host="0.0.0.0", port=8080, debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", port=8080, debug=True, use_reloader=False)
