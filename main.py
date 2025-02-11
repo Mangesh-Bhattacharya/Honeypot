@@ -1,40 +1,25 @@
+# main.py
 import threading
 import logging
 import app
 import listener
-from pynput.keyboard import Listener
 
 # Configure logging
-logging.basicConfig(filename="honeypot.log", level=logging.INFO,
-                    format="%(asctime)s - %(message)s")
+logging.basicConfig(filename="honeypot.log", level=logging.INFO, format="%(asctime)s - %(message)s")
 
-# Keylogger function to capture attacker keystrokes
-
-
-def log_keystroke(key):
-    try:
-        key = key.char if hasattr(key, 'char') else str(key)
-    except AttributeError:
-        key = str(key)
-    logging.info(f"Keystroke captured: {key}")
-
-# Start keylogger
-
-
+# Start keylogger function
 def start_keylogger():
-    with Listener(on_press=log_keystroke) as listener:
+    with listener(on_press=log_keystroke) as listener:
         listener.join()
-
 
 if __name__ == "__main__":
     logging.info("Starting Honeypot...")
 
-    # Start the web honeypot
-    flask_thread = threading.Thread(target=app.app.run, kwargs={
-                                    "host": "0.0.0.0", "port": 8080, "debug": False, "use_reloader": False})
+    # Start the web honeypot (Flask server)
+    flask_thread = threading.Thread(target=app.app.run, kwargs={"host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False})
     flask_thread.start()
 
-    # Start honeypot listeners
+    # Start honeypot listeners (for suspicious ports)
     listener_thread = threading.Thread(target=listener.start_listeners)
     listener_thread.start()
 
