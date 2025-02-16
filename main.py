@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     # Start the web honeypot (Flask server)
     flask_thread = threading.Thread(target=app.app.run, kwargs={
-                                    "host": "0.0.0.0", "port": 8080, "debug": False, "use_reloader": False})
+                                    "host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False})
     flask_thread.start()
 
     # Start honeypot listeners (for suspicious ports)
