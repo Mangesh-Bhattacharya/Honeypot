@@ -54,7 +54,7 @@ def fake_web_service():
 def is_vpn_or_proxy(ip):
     try:
         # For real VPN detection, integrate a service like IPinfo or ip-api
-        response = requests.get(f"https://ipinfo.io/{ip}/json")
+        response = requests.get(f"https://ipinfo.io/{ip}/json", timeout=5)
         data = response.json()
         return data.get("org", "").startswith("AS")
     except requests.RequestException:
@@ -88,7 +88,10 @@ if __name__ == "__main__":
     keylogger_thread.start()
 
     # Start the web service in a separate thread
-    flask_thread = threading.Thread(target=app.run, kwargs={"host": "0.0.0.0", "port": 2222, "debug": True, "use_reloader": False}, daemon=True)
+    # nosec B104 -- honeypot must listen on all interfaces to be reachable.
+    # debug=False: the Werkzeug debugger would give a real attacker an RCE
+    # console on an unhandled exception, defeating the point of a honeypot.
+    flask_thread = threading.Thread(target=app.run, kwargs={"host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False}, daemon=True)  # nosec B104
     flask_thread.start()
 
     # Start GUI

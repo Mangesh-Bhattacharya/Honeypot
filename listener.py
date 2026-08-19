@@ -10,7 +10,8 @@ logging.basicConfig(filename="honeypot.log", level=logging.INFO, format="%(ascti
 # Function to listen on arbitrary ports
 def honeypot_listener(port):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", port))
+    # nosec B104 -- honeypot must listen on all interfaces to be reachable.
+    server.bind(("0.0.0.0", port))  # nosec B104
     server.listen(5)
     logging.info(f"Listening on port {port}...")
 
