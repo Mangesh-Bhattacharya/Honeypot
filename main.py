@@ -31,8 +31,9 @@ if __name__ == "__main__":
     logging.info("Starting Honeypot...")
 
     # Start the web honeypot (Flask server)
+    # nosec B104 -- honeypot must listen on all interfaces to be reachable.
     flask_thread = threading.Thread(target=app.app.run, kwargs={
-                                    "host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False})
+                                    "host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False})  # nosec B104
     flask_thread.start()
 
     # Start honeypot listeners (for suspicious ports)
