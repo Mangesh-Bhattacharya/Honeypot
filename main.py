@@ -1,46 +1,49 @@
 # main.py
+import argparse
+import os
+import secrets
+import sys
 import threading
-import logging
+from pathlib import Path
+
+from werkzeug.serving import make_server
+
 import app
+import dashboard
+import events
 import listener
-from pynput.keyboard import Listener as KeyListener  # Rename to avoid conflict
-
-# Configure logging
-logging.basicConfig(filename="honeypot.log", level=logging.INFO,
-                    format="%(asctime)s - %(message)s")
-
-# Keylogger function to capture attacker keystrokes
 
 
-def log_keystroke(key):
+def main(argv=None):
+    p = argparse.ArgumentParser(description="Multi-service honeypot with a web dashboard")
+    p.add_argument("--data-dir", default="data", help="where events.jsonl is written")
+    p.add_argument("--real-ports", action="store_true", help="use standard ports (21/22/23/80/...); needs admin/root")
+    p.add_argument("--dashboard-host", default="127.0.0.1", help="use 0.0.0.0 to view from a phone (a token is then required)")
+    p.add_argument("--dashboard-port", type=int, default=8081)
+    args = p.parse_args(argv)
+
+    Path(args.data_dir).mkdir(parents=True, exist_ok=True)
+    events.setup(Path(args.data_dir) / "events.jsonl")
+
+    token = os.environ.get("HONEYPOT_DASH_TOKEN", "")
+    if not token and args.dashboard_host not in ("127.0.0.1", "localhost"):
+        token = secrets.token_urlsafe(16)
+        print(f"Dashboard token: {token}", flush=True)
+
+    listener.start_listeners(args.real_ports)
     try:
-        key = key.char if hasattr(key, 'char') else str(key)
-    except AttributeError:
-        key = str(key)
-    logging.info(f"Keystroke captured: {key}")
-
-# Start keylogger
-
-
-def start_keylogger():
-    with KeyListener(on_press=log_keystroke) as key_listener:  # Use a different name here
-        key_listener.join()
+        # the decoy site must be reachable on all interfaces
+        web = make_server("0.0.0.0", 80 if args.real_ports else 8080, app.app, threaded=True)  # nosec B104
+        dash = make_server(args.dashboard_host, args.dashboard_port, dashboard.make_app(token), threaded=True)
+    except OSError as exc:
+        sys.exit(f"Cannot bind a web port: {exc}")
+    threading.Thread(target=web.serve_forever, daemon=True).start()
+    events.log_event("started", dashboard=f"http://{args.dashboard_host}:{args.dashboard_port}/")
+    try:
+        dash.serve_forever()
+    except KeyboardInterrupt:
+        events.log_event("stopped")
 
 
 if __name__ == "__main__":
-    logging.info("Starting Honeypot...")
-
-    # Start the web honeypot (Flask server)
-    flask_thread = threading.Thread(target=app.app.run, kwargs={
-                                    "host": "0.0.0.0", "port": 2222, "debug": False, "use_reloader": False})
-    flask_thread.start()
-
-    # Start honeypot listeners (for suspicious ports)
-    listener_thread = threading.Thread(target=listener.start_listeners)
-    listener_thread.start()
-
-    # Start keylogger in a separate thread
-    keylogger_thread = threading.Thread(target=start_keylogger)
-    keylogger_thread.start()
-
-    logging.info("Honeypot is fully operational.")
+    main()

@@ -1,0 +1,18 @@
+services:
+  honeypot:
+    build: .
+    restart: unless-stopped   # keeps the honeypot up after crashes and reboots
+    environment:
+      HONEYPOT_DASH_TOKEN: ${HONEYPOT_DASH_TOKEN:?set a dashboard token}
+    ports:
+      - "22:2222"
+      - "21:2121"
+      - "23:2323"
+      - "3306:33306"
+      - "3389:33389"
+      - "80:8080"
+      - "127.0.0.1:8081:8081"   # dashboard: localhost only; put it behind a VPN/reverse proxy to view remotely
+    volumes:
+      - honeypot-data:/data
+volumes:
+  honeypot-data:

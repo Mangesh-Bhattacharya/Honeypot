@@ -1,37 +1,39 @@
 # Honeypot
 
-A lightweight, multi-service honeypot for a homelab environment. It exposes fake services on common attack ports, logs every connection attempt, and serves a decoy web login page to lure and record credential-stuffing attempts.
+A lightweight, multi-service honeypot. It exposes fake SSH/FTP/Telnet/MySQL/RDP services plus a decoy admin login page, records every connection and every credential attempt as structured JSON, and shows them live on a mobile-friendly web dashboard.
 
-> ⚠️ **For isolated lab/research use only.** Run this on a segmented VM or container with no access to real infrastructure — never on a production host or network.
+> ⚠️ **For isolated lab/research use only.** Run it on a segmented VM or container with no access to real infrastructure — never on a production host or network. Captured credentials are attacker-supplied; treat `events.jsonl` as sensitive.
 
-## How It Works
+## Run it
 
-- **`listener.py`** — TCP listeners on commonly targeted ports (21 FTP, 22 SSH, 23 Telnet, 80 HTTP, 443 HTTPS, 3306 MySQL, 3389 RDP). Any connection attempt is logged with source IP, port, and timestamp, then dropped with an `Access Denied` response.
-- **`app.py`** — A Flask-based decoy web login page to capture credential-harvesting attempts against a fake HTTP service.
-- **`main.py`** — Orchestrates the listeners and web decoy as background threads and writes structured logs to `honeypot.log` (gitignored — logs are runtime artifacts, not checked in).
+| Platform | How |
+|---|---|
+| Windows / macOS / Linux binary | Download from [Releases](../../releases), run `honeypot-<OS>` |
+| Docker (Linux, macOS, Windows, Raspberry Pi — amd64 + arm64) | `HONEYPOT_DASH_TOKEN=pick-a-secret docker compose up -d` |
+| From source | `pip install -r requirements.txt && python main.py` |
 
-## Setup
+By default it uses unprivileged ports (SSH 2222, FTP 2121, Telnet 2323, MySQL 33306, RDP 33389, web decoy 8080) so no admin rights are needed. `--real-ports` binds the standard ports (needs admin/root). A port that is busy or not permitted is logged and skipped; the rest keep running.
+
+## Dashboard (Android, iOS, any browser)
+
+`http://127.0.0.1:8081/` shows the latest 500 events, refreshing every 5 s. It listens on localhost only. To open it from a phone, start with `--dashboard-host 0.0.0.0`; a token is then required (`HONEYPOT_DASH_TOKEN`, or one is generated and printed) — open `http://<host>:8081/?token=<token>`. Use a VPN or HTTPS reverse proxy; the token travels in the URL.
+
+Events are written to `data/events.jsonl` (rotated at 5 MB × 3), one JSON object per line, ready for Filebeat/OpenSearch.
+
+## Test
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-python main.py
+pip install -r requirements.txt pytest
+python -m pytest
 ```
 
-## Why This Matters
-
-Honeypots are a core blue-team/deception-technology technique for early attack detection: instead of waiting for an alert on a real asset, you get a high-confidence signal the moment anyone touches a service that has no legitimate reason to be probed. This project demonstrates:
-
-- Multi-port TCP service simulation
-- Structured, timestamped attack logging
-- Decoy web-service credential capture
+CI runs the tests on Ubuntu, Windows and macOS (Python 3.10 and 3.12), plus Bandit, CodeQL and a Docker smoke test.
 
 ## Roadmap
 
-- [ ] Ship logs to a SIEM (OpenSearch/ELK) instead of a flat file
-- [ ] Add banner-grabbing per service (SSH/FTP banners) for higher-fidelity deception
-- [ ] Dockerize for one-command isolated deployment
+- [ ] Ship events to a SIEM (OpenSearch/ELK) natively
+- [ ] Per-IP rate limiting / connection caps
+- [ ] Native mobile push alerts
 
 ## License
 
