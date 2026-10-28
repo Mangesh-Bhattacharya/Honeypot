@@ -4,3 +4,8 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+data/
+events.jsonl*
+build/
+dist/
+*.spec

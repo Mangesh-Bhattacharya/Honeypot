@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  binaries:
+    name: Binary (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt pyinstaller pytest
+      - run: python -m pytest -q
+      - run: pyinstaller --onefile --name honeypot-${{ runner.os }} main.py
+      - run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  image:
+    name: Multi-arch image (amd64 + arm64 for Raspberry Pi / Apple silicon)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: docker/build-push-action@v6
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/${{ github.repository_owner }}/honeypot:${{ github.ref_name }},ghcr.io/${{ github.repository_owner }}/honeypot:latest

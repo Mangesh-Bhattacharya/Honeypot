@@ -1,35 +1,55 @@
 # listener.py
-import socket
+import socketserver
+import sys
 import threading
-import logging
-import datetime
 
-# Configure logging for attack detections
-logging.basicConfig(filename="honeypot.log", level=logging.INFO, format="%(asctime)s - %(message)s")
+from events import log_event
 
-# Function to listen on arbitrary ports
-def honeypot_listener(port):
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", port))
-    server.listen(5)
-    logging.info(f"Listening on port {port}...")
+# name: (standard port, unprivileged port, banner). Unprivileged ports work without admin/root on every OS.
+SERVICES = {
+    "ftp": (21, 2121, b"220 (vsFTPd 3.0.5)\r\n"),
+    "ssh": (22, 2222, b"SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6\r\n"),
+    "telnet": (23, 2323, b"login: "),
+    "mysql": (3306, 33306, b""),
+    "rdp": (3389, 33389, b""),
+}
 
-    while True:
-        client, addr = server.accept()
-        # Capture attack details
-        attack_details = f"Connection attempt from {addr[0]}:{addr[1]} on port {port}."
-        logging.info(attack_details)
-        print(f"Attack Detected: {attack_details}")
 
-        client.send(b"Access Denied\n")
-        client.close()
+class _Server(socketserver.ThreadingTCPServer):
+    daemon_threads = True
+    # On Windows SO_REUSEADDR lets another process bind the same port, so only set it elsewhere.
+    allow_reuse_address = sys.platform != "win32"
 
-# Start Listener
-def start_listeners():
-    ports = [21, 22, 23, 80, 443, 3306, 3389]  # Common attack ports
-    for port in ports:
-        thread = threading.Thread(target=honeypot_listener, args=(port,))
-        thread.start()
 
-    # For verbose display
-    print("Listeners started on common ports: 21, 22, 23, 80, 443, 3306, 3389")
+def _handler_for(service, banner):
+    class Handler(socketserver.BaseRequestHandler):
+        def handle(self):
+            data = b""
+            self.request.settimeout(5)
+            try:
+                if banner:
+                    self.request.sendall(banner)
+                data = self.request.recv(1024)
+            except OSError:
+                pass
+            log_event("connection", service=service, port=self.server.server_address[1],
+                      src_ip=self.client_address[0], src_port=self.client_address[1],
+                      data=data.decode("latin-1"))
+    return Handler
+
+
+def serve(service, banner, host, port):
+    server = _Server((host, port), _handler_for(service, banner))
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
+
+
+def start_listeners(real_ports=False, host="0.0.0.0"):  # nosec B104
+    servers = []
+    for name, (standard, unprivileged, banner) in SERVICES.items():
+        port = standard if real_ports else unprivileged
+        try:
+            servers.append(serve(name, banner, host, port))
+        except OSError as exc:  # port taken or no privilege: skip it, keep the rest alive
+            log_event("error", service=name, port=port, msg=str(exc))
+    return servers
